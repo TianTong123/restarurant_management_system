@@ -4,7 +4,7 @@
       <div class="logo-title">余文国际五星级连锁酒店管理System</div>
       <div class="user-wrap">
         <el-dropdown trigger="click" @command="handleCommand">
-          <el-avatar size="medium" src="../../assets/logo.png" ></el-avatar>
+          <el-avatar size="small" src="../../assets/logo.png" ></el-avatar>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-lock" command="1">修改密码</el-dropdown-item>
             <el-dropdown-item icon="el-icon-apple" command="2">退出登录</el-dropdown-item>
@@ -15,7 +15,7 @@
     <div class="wrap">
       <div class="menu">
         <el-menu
-          style="width:100%; margin-top: 20px"
+          style="width:100%; margin-top: 20px;"
           default-active="1"
           class="el-menu-vertical-demo"
           background-color="#545c64"
