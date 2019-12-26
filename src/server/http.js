@@ -17,34 +17,17 @@ import axios from 'axios';
  */
 
 // 封装请求方法
-const http = ({
+export const http = ({
     url,
     method,
     params,
     timeout,
     isOriginalGET,
-    systemId,
     deviceId,
     lang,
-    jwt,
-    userId,
-    logoutCallback,
     changeJwtCallback,
-    noAuthCallback,
     responseType
 }) => {
-    // 用户退出登录
-    const userLogout = function() {
-        // 直接退出不清空 redis
-        let info = "登录已过期，请重新登录";
-        logoutCallback(info);
-    }
-
-    // 无权限访问
-    const noAuthority = function() {
-        let info = "无权限访问";
-        noAuthCallback(info);
-    }
 
     // axios 默认设置
     axios.defaults.retry = 3;
@@ -111,22 +94,14 @@ const http = ({
         url: url,
         timeout: 20000,
         headers: {
-            'systemId': systemId,
             'device': 'PC'
         }
     };
-
+    
     // 用来覆盖默认的超时时间
     if (timeout) {
         config.timeout = timeout;
     }
-
-    // 判断是否有鉴权
-    if (userId && jwt) {
-        config.headers.uid = userId;
-        config.headers.authorization = jwt;
-    }
-
     // 后端判断错误信息返回语言
     if (lang) {
         config.headers.lang = lang;
@@ -135,9 +110,10 @@ const http = ({
 
     // 设备标识
     if (deviceId) {
-        config.headers.deviceId = deviceId
+        config.headers.deviceId = deviceId;
     }
 
+    //get方法拼接参数
     method = method.toUpperCase();
     if (method == 'GET') {
         if (isOriginalGET) {
@@ -152,7 +128,7 @@ const http = ({
         config.data = params;
     }
 
-    // 在请求地址后面加时间戳
+    //在请求地址后面加时间戳
     if (config.params) {
         config.params.ts = `${(new Date()).getTime()}`;
     } else {
@@ -161,12 +137,9 @@ const http = ({
         };
     }
 
-    // ---20191211/v0.0.2
     if(responseType){
         config.responseType = responseType
     }
-
+    
     return axios(config);
 }
-
-export default http;

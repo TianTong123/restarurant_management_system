@@ -4,8 +4,20 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-    modules:{
+const store = new Vuex.Store({
+  state: {
+    user: {
+      userName: "",
+      account: "",
+      uid: "",
+      id: "",
+    },//当前登陆人信息
+    token: "",
+  },
 
-    }
-})
+  mutations: {
+    
+  }
+});
+  
+export default store;

@@ -16,12 +16,13 @@
       <div class="menu">
         <el-menu
           style="width:100%; margin-top: 20px;"
-          default-active="1"
+          default-active="home"
+          router
           class="el-menu-vertical-demo"
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="1">
+          <el-menu-item index="home">
             <i class="el-icon-s-data"></i>
             <span slot="title">销售统计</span>
           </el-menu-item>
@@ -33,21 +34,21 @@
             <i class="el-icon-cherry"></i>
             <span slot="title">商品管理</span>
           </el-menu-item>
-          <el-menu-item index="4">
+          <el-menu-item index="account">
             <i class="el-icon-user-solid"></i>
             <span slot="title">人员管理</span>
           </el-menu-item>
         </el-menu>
       </div>
       <div class="content">
-        <el-tabs style="margin-top: 10px" type="card" v-model="editableTabsValue" closable @tab-remove="removeTab">
+        <el-tabs style="margin-top: 10px" type="card" v-model="activeTab" closable @tab-click="tabClick" @tab-remove="removeTab">
           <el-tab-pane
-            v-for="(item, index) in editableTabs"
+            v-for="(item, index) in activeTabs"
             :key="index"
             :label="item.title"
             :name="item.name"
           >
-            {{item.content}}
+            <router-view></router-view>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -59,46 +60,78 @@
   export default {
     data(){
       return{
-        editableTabsValue: '2',
-        editableTabs: [{
-          title: 'Tab 1',
-          name: '1',
-          content: 'Tab 1 content'
-        }, {
-          title: 'Tab 2',
-          name: '2',
-          content: 'Tab 2 content'
+        activeTab: 'home',
+        activeTabs: [{
+          title: '首页',
+          name: 'home',
         }],
-        tabIndex: 2
       }
     },
     methods: {
-      //删除标签文件
+      //标签点击
+      tabClick(tab) {
+        this.$router.push({name: tab.name });
+      },
+      
+      //删除标签
       removeTab(targetName) {
-        let tabs = this.editableTabs;
-        let activeName = this.editableTabsValue;
+        let tabs = this.activeTabs;
+        let activeName = this.activeTab;
+        //当关闭的是当前激活的tab
         if (activeName === targetName) {
           tabs.forEach((tab, index) => {
             if (tab.name === targetName) {
               let nextTab = tabs[index + 1] || tabs[index - 1];
               if (nextTab) {
                 activeName = nextTab.name;
+                this.$router.push({name: activeName });
               }
             }
           });
         }
         
-        this.editableTabsValue = activeName;
-        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+        this.activeTab = activeName;
+        this.activeTabs = tabs.filter(tab => tab.name !== targetName);
       },
+
+      //增加标签
+      addTab(name, title) {
+        this.activeTabs.push({
+          title:title,
+          name: name,
+        });
+        this.activeTab = name;
+      },
+
       //下拉菜单点击(点击用户头像的)
       handleCommand(command) {
         this.$message('click on item ' + command);
       },
-    }
+    },
+    watch:{
+      //通过监听路由来进行控制tab的增减
+      $route(to) {
+        let isHaveNameFlag = false; //如果数组有这个路径，则为true，没有就是false
+        let activeIndex = 0;//激活tab的下标
+        for(let i = 0; i < this.activeTabs.length; i ++){
+          if(to.name == this.activeTabs[i].name){
+            isHaveNameFlag = true
+            activeIndex = i;
+          }
+        }
+        
+        if(isHaveNameFlag){//如果有这个路径，则激活当前tab
+          this.activeTab = this.activeTabs[activeIndex].name
+        }
+        else{//如果没有这个路径。则新增一个tab并激活这个tab
+          this.addTab(to.name, to.meta.title)
+        }
+        
+      }
+    }, 
   }
 </script>
 
 <style scoped>
-@import '../../../static/css/home.css';
+@import '../../static/css/home.css';
 </style>

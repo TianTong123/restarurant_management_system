@@ -1,6 +1,6 @@
 const apienv = {
   dev: {
-    osp: "http://172.16.100.32:10090/osp/",
+    osp: "http://192.168.17.126:8848/",
   },
 };
 export default apienv;
