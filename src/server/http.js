@@ -7,13 +7,10 @@ import axios from 'axios';
  * timeout: 超时时间
  * isOriginalGET: 是否传统get传参
  * systemId: 系统id
- * deviceId: 设备编码
  * jwt: 鉴权 token
  * userId: 用户id 
  * logoutCallback: 登出回调
- * changeJwtCallback：换jwt回调
  * noAuthCallback: 无权限访问登录
- * responseType:响应的数据类型 
  */
 
 // 封装请求方法
@@ -23,12 +20,17 @@ export const http = ({
     params,
     timeout,
     isOriginalGET,
-    deviceId,
-    lang,
-    changeJwtCallback,
-    responseType
 }) => {
-
+    function myTipConfirm(msg, callback){
+        let cfm = confirm(msg);
+	    if (cfm==true){
+          callback();
+          this.$router.push({name: 'login'});
+	    }
+	    else{
+          this.$router.push({name: 'login'});
+	    }
+    };
     // axios 默认设置
     axios.defaults.retry = 3;
     axios.defaults.retryDelay = 1000;
@@ -36,81 +38,29 @@ export const http = ({
     axios.interceptors.response.use(
         response => {
             //登录失效的时候重定向为登录页面
-            if (response.data.code == -11) {
-                userLogout()
+            if (response.data.code == 2) {
+                myTipConfirm("登录数据失效，请返回登录页！")
                 return response
-            } else if (response.data.code == 21 || response.data.code == -21 || response.data.code == 22) {
-                let config = response.config;
-                const changeJwt = () => {
-                    if (response.data.data) {
-                        changeJwtCallback(response.data.data)
-                        config.headers.authorization = response.data.data;
-                    }
-                }
-
-                // 21:更换jwt , 22:频繁F5刷新 更新jwt
-                if (response.data.code == 21 || response.data.code == 22) {
-                    changeJwt();
-                }
-
-                // 判断是否配置了重试      
-                if (!config || !config.retry) return response;
-                // 设置重置次数，默认为0      
-                config.__retryCount = config.__retryCount || 0;
-                // 判断是否超过了重试次数      
-                if (config.__retryCount >= config.retry) {
-                    userLogout()
-                    return response
-                }
-                config.__retryCount += 1;
-                // 延时
-                var backoff = new Promise(function(resolve) {
-                    setTimeout(function() {
-                        resolve();
-                    }, config.retryDelay || 1);
-                });
-
-                //重新发起axios请求              
-                return backoff.then(function() {
-                    // var authorization = jwt;
-                    // if (authorization) {
-                    //     config.headers.authorization = authorization;
-                    // }
-                    return axios(config);
-                });
-            } else if (response.data.code == -31) {
-                noAuthority()
+            }
+            else if (response.data.code == 3) {
+                myTipConfirm("系统错误！")
                 return response
-            } else {
+            }else {
                 return response
             }
         }
     )
-
 
     !params && (params = {});
     let config = {
         method: method,
         url: url,
         timeout: 20000,
-        headers: {
-            'device': 'PC'
-        }
     };
     
     // 用来覆盖默认的超时时间
     if (timeout) {
         config.timeout = timeout;
-    }
-    // 后端判断错误信息返回语言
-    if (lang) {
-        config.headers.lang = lang;
-        config.headers.locale = lang;
-    }
-
-    // 设备标识
-    if (deviceId) {
-        config.headers.deviceId = deviceId;
     }
 
     //get方法拼接参数
@@ -135,10 +85,6 @@ export const http = ({
         config.params = {
             ts: `${(new Date()).getTime()}`
         };
-    }
-
-    if(responseType){
-        config.responseType = responseType
     }
     
     return axios(config);

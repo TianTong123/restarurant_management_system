@@ -1,11 +1,9 @@
 import apienv from "./env";
-import constant from "./constant";
 import router from "@/router";
 import store from "@/store/store.js";
 import util from "@/util/utils";
 import { http } from "./http";
 
-const env = apienv[constant.appenv];
 /**
  * url: 地址
  * method: 请求方法
@@ -21,17 +19,13 @@ const req = ({
   params,
   timeout,
   isOriginalGET,
-  responseType
 }) => {
   let options = {
-    url: env[baseUrl] + url,//拼接地址
+    url: apienv.dev.baseUrl + url,//拼接地址
     method: method,
     params: params,
     timeout: timeout,
     isOriginalGET: isOriginalGET,
-    systemId: constant.systemId,
-    deviceId: window.fingerprint,
-    responseType
   };
   return http(options);
 };

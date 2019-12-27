@@ -4,6 +4,7 @@
     <input type="text">
     <router-link :to="{name: 'home'}"> <input type="button" value="跳登录"/></router-link>
    <button @click="test">登录</button>
+   <button @click="msg">消息</button>
    <!-- <button @click="noHttp">登录2</button> -->
    <h1>{{returnMsg}}</h1> 
   </div>
@@ -23,6 +24,9 @@ export default {
         this.returnMsg = res.data
       })
     },
+    msg(){
+      this.$myMsg('dede');
+    }
   }
 }
 </script>

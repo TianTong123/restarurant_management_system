@@ -4,7 +4,7 @@
       <div class="logo-title">余文国际五星级连锁酒店管理System</div>
       <div class="user-wrap">
         <el-dropdown trigger="click" @command="handleCommand">
-          <el-avatar size="small" src="http://192.168.17.126:8088/commodity/imgShow"></el-avatar>
+          <el-avatar size="small" src=""></el-avatar>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-lock" command="1">修改密码</el-dropdown-item>
             <el-dropdown-item icon="el-icon-apple" command="2">退出登录</el-dropdown-item>
@@ -16,7 +16,7 @@
       <div class="menu">
         <el-menu
           style="width:100%; margin-top: 20px;"
-          default-active="home"
+          :default-active="activeTab"
           router
           class="el-menu-vertical-demo"
           background-color="#545c64"
@@ -43,8 +43,8 @@
       <div class="content">
         <el-tabs style="margin-top: 10px" type="card" v-model="activeTab" closable @tab-click="tabClick" @tab-remove="removeTab">
           <el-tab-pane
-            v-for="(item, index) in activeTabs"
-            :key="index"
+            v-for="item in activeTabs"
+            :key="item.name"
             :label="item.title"
             :name="item.name"
           >
@@ -89,9 +89,12 @@
             }
           });
         }
-        
+        //关闭非激活页面
         this.activeTab = activeName;
-        this.activeTabs = tabs.filter(tab => tab.name !== targetName);
+        //不能关闭最后一个标签
+        if (this.$route.name != targetName && this.activeTabs.length>1){
+          this.activeTabs = tabs.filter(tab => tab.name !== targetName);
+        }
       },
 
       //增加标签
