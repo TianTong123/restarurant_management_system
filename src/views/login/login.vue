@@ -5,12 +5,15 @@
     <router-link :to="{name: 'home'}"> <input type="button" value="跳登录"/></router-link>
    <button @click="test">登录</button>
    <button @click="msg">消息</button>
+   <button @click="notify">通知</button>
+   <button @click="downLodeFile">下载</button>
    <!-- <button @click="noHttp">登录2</button> -->
    <h1>{{returnMsg}}</h1> 
   </div>
 </template>
 
 <script>
+import downLoadFileFlow from "@/server/downLoadFile";
 export default {
   data(){
     return {
@@ -21,12 +24,35 @@ export default {
   methods:{
     test(){
       this.$http.helloWord({test: this.text}).then(res => {
-        this.returnMsg = res.data
+        if(res.data.code = 1)
+        this.$myMsg.confirm({
+          content: res.data.data,
+          type: 'success',
+        })
+          this.returnMsg = res.data.data
       })
     },
     msg(){
-      this.$myMsg('dede');
-    }
+      this.$myMsg.confirm({
+        content: '啦啦啦',
+        type: 'prompt',
+        callback: ()=>{console.log("!!!!")}
+      });
+    },
+    notify(){
+      this.$myMsg.notify({
+        content: '啦啦啦',
+        type: 'success',
+      });
+    },
+    downLodeFile () {
+      let obj = {
+        viewPath: "OSP/M00/00/00/rBBkKF38FWSEQK4RAAAAAIzsYvY298.pdf", //文件路径
+        groupName: "OSP",
+        fileName: ""
+      };
+      downLoadFileFlow(obj, "模板简历.pdf");
+    },
   }
 }
 </script>

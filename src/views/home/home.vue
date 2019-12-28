@@ -22,7 +22,7 @@ export default {
       })
     },
     msg(){
-      this.$myMsg({
+      this.$myMsg.confirm({
         content: '啦啦啦',
         type: 'error',
         callback: ()=>{console.log("!!!!")}

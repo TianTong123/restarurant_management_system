@@ -23,16 +23,24 @@ let api = {
   //     params: data,
   //     isOriginalGET: true
   //   }),
-  // // 下载文件
-  // getFileFlow: data =>
+  // 下载文件1
+  // downLoadFile: data =>
   //   req({
   //     baseUrl: "osp",
-  //     method: "get",
-  //     url: "tblResumeBase/downloadFlow",
-  //     params: data,
-  //     isOriginalGET: true,
-  //     responseType: "arraybuffer"
+  //     method: "post",
+  //     url: "uploadFastdfs/downFile",
+  //     params: data
   //   }),
+  // // 下载文件
+  getFileFlow: data =>
+    req({
+      baseUrl: "testUrl",
+      method: "get",
+      url: "osp/tblResumeBase/downloadFlow",
+      params: data,
+      isOriginalGET: true,
+      responseType: "arraybuffer"
+    }),
 };
 api = Object.assign(
   api,
