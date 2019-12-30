@@ -5,7 +5,7 @@ import store from "./store/store";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import api from "@/server/api.js";
-import message from "@/components/myMsg"
+import message from "@/components/myMsg/index"
 
 
 Vue.config.productionTip = false;

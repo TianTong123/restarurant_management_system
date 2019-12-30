@@ -54,7 +54,8 @@ export default {
       }
       this.$myMsg.notify({
         content: "啦啦啦",
-        type: type,
+        type: 'success',
+        //time: 5500
       });
     },
     downLodeFile () {
