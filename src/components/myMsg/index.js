@@ -86,7 +86,7 @@ let myMsg = {
   notify: ({
     content, 
     type, 
-    time = 3500,
+    time = 1500,
   }) =>{
     //创建一个存放通知的div
     const notifyDom = new notify({

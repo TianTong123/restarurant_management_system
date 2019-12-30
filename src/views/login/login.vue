@@ -41,9 +41,20 @@ export default {
       });
     },
     notify(){
+      let type = "";
+      if(this.num == 0){
+        type = "success"
+        this.num  = 1
+      }else if(this.num == 1){
+        type = "warning"
+        this.num  = 2
+      }else{
+        type = "error"
+        this.num = 0;
+      }
       this.$myMsg.notify({
-        content: this.num ++,
-        type: 'success',
+        content: "啦啦啦",
+        type: type,
       });
     },
     downLodeFile () {

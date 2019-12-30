@@ -13,7 +13,7 @@
         </div>
         <div class="content">{{content}}</div>
       </div>
-      <div class="notify prompt" v-else-if="type=='warring'">
+      <div class="notify warning" v-else-if="type=='warning'">
         <div class="tip">
           <span>警告</span>
         </div>
