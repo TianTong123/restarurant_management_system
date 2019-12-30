@@ -10,7 +10,6 @@ header{
   background-color: #1C272B;
   color: #fff;
   text-align: center;
-  box-shadow: 0 5px 5px 0 rgba(204,204,204, 1);
 }
 header .logo-title{
   display: inline-block;
@@ -43,3 +42,8 @@ header .user-wrap{
   right: 0;
   height: 100%;
 }
+/* .wrap .content .el-tabs{
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+} */

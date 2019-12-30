@@ -1,39 +1,42 @@
 <template>
   <transition name="slide-fade">
-    <div class="my-notify" v-if="notifyFlag" :style="{'top': 90*top+'px'}">
-    <div class="notify success" v-if="type=='success'">
-      <div class="tip">
-        <span>成功</span>
+    <div class="my-notify" v-if="notifyFlag">
+      <div class="notify success" v-if="type=='success'">
+        <div class="tip">
+          <span>成功</span>
+        </div>
+        <div class="content"> {{content}}</div>
       </div>
-      <div class="content"> 这个操作很成功，这很蔡徐坤！</div>
-    </div>
-    <div class="notify error" v-else-if="type=='error'">
-      <div class="tip">
-        <span>错误</span>
+      <div class="notify error" v-else-if="type=='error'">
+        <div class="tip">
+          <span>错误</span>
+        </div>
+        <div class="content">{{content}}</div>
       </div>
-      <div class="content"> 这个操作很错误，这很蔡徐坤！</div>
-    </div>
-    <div class="notify prompt" v-else-if="type=='warring'">
-      <div class="tip">
-        <span>警告</span>
+      <div class="notify prompt" v-else-if="type=='warring'">
+        <div class="tip">
+          <span>警告</span>
+        </div>
+        <div class="content">{{content}}</div>
       </div>
-      <div class="content"> 这个操作很警告，这很蔡徐坤！</div>
-    </div>
     </div>
   </transition>
 </template>
 
 <style scoped>
 .slide-fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 .slide-fade-enter, .slide-fade-leave-to{
   transform: translateX(10px);
   opacity: 0;
 }
+.notify-wrap{
+  
+  background-color: #1AFA29;
+}
 .my-notify{
-  position: fixed;
-  right: 0px;
+  margin: 10px;
   width: 350px;
 }
 .notify{

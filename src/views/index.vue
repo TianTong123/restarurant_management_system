@@ -41,7 +41,7 @@
         </el-menu>
       </div>
       <div class="content">
-        <el-tabs style="margin-top: 10px" type="card" v-model="activeTab" closable @tab-click="tabClick" @tab-remove="removeTab">
+        <el-tabs  type="card" v-model="activeTab" closable @tab-click="tabClick" @tab-remove="removeTab">
           <el-tab-pane
             v-for="item in activeTabs"
             :key="item.name"
@@ -136,5 +136,5 @@
 </script>
 
 <style scoped>
-@import '../../static/css/home.css';
+@import '../../static/css/index.css';
 </style>

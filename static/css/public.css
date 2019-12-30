@@ -1,0 +1,60 @@
+.m-wrap{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.m-head{
+  width: 100%;
+}
+/* 输入框 */
+.m-head .el-input{
+  margin: 20px 0 0 20px;
+  display: inline-block;
+  width: 200px;
+}
+.m-head .el-input input{
+  width: 200px;
+}
+/* 单选框 */
+.m-head .el-radio{
+  margin-left: 20px;
+  margin-right: 0;
+}
+/* 按钮 */
+.m-head .el-button{
+  margin-left: 20px;;
+}
+
+.m-body{
+  flex:1;
+  padding: 0 20px;
+  min-width: 500px;
+  text-align: center;
+  overflow-y: auto;
+}
+
+/* 分页 */
+.m-body .el-pagination{
+  margin: 32px 0;
+}
+
+/* el-tab */
+.el-tabs{
+  position: relative;
+  height: 100%;
+}
+.el-tabs .el-tabs__header .el-tabs__nav{
+  border-top: 0px;
+  border-bottom: 0px;
+}
+.el-tabs .el-tabs__content{
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  width: 100%;
+}
+.el-tabs .el-tabs__content .el-tab-pane{
+  height: 100%;
+}
+

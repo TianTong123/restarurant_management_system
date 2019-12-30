@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <input type="text" v-model="text">
-    <input type="text">
+    <input type="password">
     <router-link :to="{name: 'home'}"> <input type="button" value="跳登录"/></router-link>
    <button @click="test">登录</button>
    <button @click="msg">消息</button>
@@ -18,7 +18,8 @@ export default {
   data(){
     return {
       returnMsg: '',
-      text: ''
+      text: '',
+      num: 0,
     }
   },
   methods:{
@@ -41,7 +42,7 @@ export default {
     },
     notify(){
       this.$myMsg.notify({
-        content: '啦啦啦',
+        content: this.num ++,
         type: 'success',
       });
     },

@@ -5,7 +5,13 @@ import myNotify from './myNotify'
 // 组件构造器，构造出一个 vue组件实例
 const message = vue.extend(myMesssage);
 const notify = vue.extend(myNotify);
-let top = 0;
+
+//添加通知节点
+let notifyWrap = document.createElement('div');
+notifyWrap.className = "notify-wrap"
+notifyWrap.style = "position: fixed; right: 0px; transition-duration: .5s;"
+document.body.appendChild(notifyWrap);
+
 
 let myMsg = {
   /**
@@ -73,12 +79,16 @@ let myMsg = {
 
   /**
    * 通知框
+   * @content 提示内容;
+   * @type 提示框类型，parameter： success，error，prompt
+   * @time 显示时长
    */
   notify: ({
     content, 
     type, 
-    time = 1500,
+    time = 3500,
   }) =>{
+    //创建一个存放通知的div
     const notifyDom = new notify({
       el: document.createElement('div'),
       data () {
@@ -87,38 +97,33 @@ let myMsg = {
           time: time,//取消按钮是否显示
           content: content, // 文本内容
           type: type, // 类型
-          top: top,
           timer: '',
-          timerFlag: '',
+          timeFlag: false,
+        }
+      },
+      watch:{
+        timeFlag(){
+          if(this.timeFlag){
+            this.notifyFlag = false;
+            window.clearTimeout(this.timer); 
+          }
         }
       },
       created(){
-        this.top += 1;
-        top += 1;
-        this.timer = setInterval(() => {
-          if(this.top == 1){
-           // this.timerFlag = setTimeout(() => {       
-              top -= 1;
-              this.notifyFlag = false;
-              window.clearInterval(this.timer); 
-            //}, 1000);
-          }else{
-            this.timerFlag = setTimeout(() => {   
-              this.top -= 1;
-            }, 1000);
-          } 
+        this.timer = setTimeout(() => { 
+          this.timeFlag = true;
         }, this.time);
+         
       },
       beforeDestroy(){
         window.clearTimeout(this.timer); 
-        window.clearTimeout(this.timerFlag); 
       }
     })
+    
      // 添加节点
-    document.body.appendChild(notifyDom.$el);
+    notifyWrap.appendChild(notifyDom.$el);
   }
 }
-
 
 
 //注册
@@ -126,6 +131,8 @@ function register(){
   //注册
   vue.prototype.$myMsg = myMsg
 }
+
+
 
 export default {
   myMsg,

@@ -12,7 +12,8 @@ export default {
   data(){
     return {
       returnMsg: '',
-      text: ''
+      text: '',
+      num: 0,
     }
   },
   methods:{
@@ -23,7 +24,7 @@ export default {
     },
     msg(){
       this.$myMsg.confirm({
-        content: '啦啦啦',
+        content: this.num,
         type: 'error',
         callback: ()=>{console.log("!!!!")}
       });
