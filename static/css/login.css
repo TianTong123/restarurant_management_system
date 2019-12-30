@@ -1,0 +1,22 @@
+.login{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.login .wrap{
+  position: absolute;
+  top: 50%;
+  margin-top: -140px;
+  left: 50%;
+  margin-left: -125px;
+  width: 350px;
+  height: 280px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+}
+.login .wrap span{
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 80px;
+}

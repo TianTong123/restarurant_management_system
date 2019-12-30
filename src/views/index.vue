@@ -26,7 +26,7 @@
             <i class="el-icon-s-data"></i>
             <span slot="title">销售统计</span>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="order">
             <i class="el-icon-s-claim"></i>
             <span slot="title">订单管理</span>
           </el-menu-item>

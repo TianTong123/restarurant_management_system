@@ -1,14 +1,17 @@
 <template>
   <div class="login">
-    <input type="text" v-model="text">
-    <input type="password">
-    <router-link :to="{name: 'home'}"> <input type="button" value="跳登录"/></router-link>
-   <button @click="test">登录</button>
-   <button @click="msg">消息</button>
-   <button @click="notify">通知</button>
-   <button @click="downLodeFile">下载</button>
-   <!-- <button @click="noHttp">登录2</button> -->
-   <h1>{{returnMsg}}</h1> 
+    <div class="wrap">
+      <span>余文国际后台管理系统</span>
+      <el-form ref="loginForm" :rules="rules" :model="loginForm">
+        <el-form-item prop="account">
+          <el-input v-model="loginForm.account" placeholder="账号"></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password" placeholder="密码"></el-input>
+        </el-form-item>
+        <el-button type="primary" @click="login">登录</el-button>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -17,45 +20,26 @@ import downLoadFileFlow from "@/server/downLoadFile";
 export default {
   data(){
     return {
-      returnMsg: '',
-      text: '',
-      num: 0,
+      loginForm:{
+        account: "",
+        password: '',
+      },
+       rules: {
+          account: [
+            { required: true, message: '账号不能为空', trigger: 'blur' },
+          ],
+          password: [
+            { required: true, message: '密码不能为空', trigger: 'blur' },
+          ]
+      }
     }
   },
   methods:{
-    test(){
-      this.$http.helloWord({test: this.text}).then(res => {
-        if(res.data.code = 1)
-        this.$myMsg.confirm({
-          content: res.data.data,
-          type: 'success',
-        })
-          this.returnMsg = res.data.data
-      })
-    },
-    msg(){
-      this.$myMsg.confirm({
-        content: '啦啦啦',
-        type: 'prompt',
-        callback: ()=>{console.log("!!!!")}
-      });
-    },
-    notify(){
-      let type = "";
-      if(this.num == 0){
-        type = "success"
-        this.num  = 1
-      }else if(this.num == 1){
-        type = "warning"
-        this.num  = 2
-      }else{
-        type = "error"
-        this.num = 0;
-      }
-      this.$myMsg.notify({
-        content: "啦啦啦",
-        type: 'success',
-        //time: 5500
+    login(){
+      this.$refs['loginForm'].validate((valid) => {
+        if (valid) {
+          this.$router.replace({name: 'home'})
+        }
       });
     },
     downLodeFile () {
@@ -71,5 +55,5 @@ export default {
 </script>
 
 <style scoped>
-
+@import '../../../static/css/login.css';
 </style>
