@@ -41,6 +41,13 @@ export default {
     login(){
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
+          this.$http({
+            accountCode: this.loginForm.account,
+          }).then(res => {
+
+          }).catch(err => {
+
+          })
           this.$router.replace({name: 'home'})
         }
       });

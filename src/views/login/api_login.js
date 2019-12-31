@@ -6,9 +6,8 @@ const api = {
   //测试代码
   helloWord: data => req({
     baseUrl: baseUrl,
-    method: "get",
-    isOriginalGET: true,
-    url: "music/helloWorld",
+    method: "post",
+    url: "user/login",
     params: data
   }), 
 }
