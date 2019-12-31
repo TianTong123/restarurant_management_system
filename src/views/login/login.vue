@@ -1,7 +1,10 @@
 <template>
   <div class="login">
+    <div class="bg"></div>
+    <span>余文国际后台管理系统</span>
     <div class="wrap">
-      <span>余文国际后台管理系统</span>
+      <div class="login-title">登录</div>
+      <div class="login-bg"></div>
       <el-form ref="loginForm" :rules="rules" :model="loginForm">
         <el-form-item prop="account">
           <el-input v-model="loginForm.account" placeholder="账号"></el-input>
