@@ -3,10 +3,11 @@ let baseUrl = 'devUrl';
 
 // 登录api
 const api = {
-  login: data => req({
+  //测试代码
+  test: data => req({
     baseUrl: baseUrl,
     method: "post",
-    url: "user/login",
+    url: "user/testToken",
     params: data
   }), 
 }

@@ -10,7 +10,7 @@
           <el-input v-model="loginForm.account" placeholder="账号"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" placeholder="密码"></el-input>
+          <el-input v-model="loginForm.password" placeholder="密码" show-password></el-input>
         </el-form-item>
         <el-button type="primary" @click="login">登录</el-button>
       </el-form>
@@ -41,14 +41,30 @@ export default {
     login(){
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
-          this.$http({
+          this.$http.login({
             accountCode: this.loginForm.account,
+            password: this.loginForm.password
           }).then(res => {
-
+            if(res.data.code == 0){
+              this.$myMsg.notify({
+                content: '登录成功！',
+                type: 'success'
+              })
+              this.$store.state.token = res.data.data.token;
+              this.$router.replace({name: 'home'})
+            }else if(res.data.code == 1){
+              this.$myMsg.notify({
+                content: res.data.msg,
+                type: 'error'
+              })
+            }
           }).catch(err => {
-
+             this.$myMsg.notify({
+              content: err,
+              type: 'error'
+            })
           })
-          this.$router.replace({name: 'home'})
+          
         }
       });
     },

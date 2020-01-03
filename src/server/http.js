@@ -1,6 +1,8 @@
 import axios from 'axios';
 import msg from "@/components/myMsg"
+import store from "@/store/store"
 
+let myMsg = msg.myMsg;
 /**
  * @url 地址
  * @method 请求方法
@@ -23,11 +25,12 @@ export const http = ({
     axios.defaults.retry = 3;//重试次数
     axios.defaults.retryDelay = 1000;//重试延迟
 
-    // axios request拦截器
-    // axios.instance.interceptors.request.use(
+    //axios request拦截器
+    // axios.interceptors.request.use(
     //   config => {
     //     if (store.state.token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
-    //       config.headers.authorization = store.state.token  //请求头加上token
+    //       //config.headers.authorization = store.state.token  //请求头加上token
+    //      // config.headers.token = store.state.token
     //     }
     //     return config
     //   },
@@ -40,14 +43,14 @@ export const http = ({
       response => {
         //登录失效的时候重定向为登录页面
         if(response.data.code == 2){
-          msg.confirmMessage({
+          myMsg.confirm({
             type: 'error',
             content: '用户数据失效！点确定返回登录页',
             callback: ()=>{this.$router.replace({name: 'login'})}
           })
           return response
         }else if(response.data.code == 3){
-          msg.confirmMessage({
+          myMsg.confirm({
             type: 'error',
             content: '系统错误！',
           })
@@ -84,10 +87,13 @@ export const http = ({
       },
       //接口错误状态处理
       error => {
-        msg.confirmMessage({
-          type: 'error',
-          content: resizeBy.data.msg,//显示返回的错误信息
-        })
+        setTimeout(() => {
+          myMsg.confirm({
+            type: 'error',
+            content: "未知错误！",//显示返回的错误信息
+          })
+        }, 0);
+        
         return error
       }
     )

@@ -1,5 +1,6 @@
 import { req } from "./req";
 import api_login from "@/views/login/api_login";
+import api_home from "@/views/home/api_home";
 let api = {
   // Demo Code
   // // 重置个人信息
@@ -45,6 +46,7 @@ let api = {
 api = Object.assign(
   api,
   api_login,
+  api_home,
 );
 
 export default api;
