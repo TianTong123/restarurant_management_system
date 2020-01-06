@@ -1,8 +1,6 @@
 import apienv from "./env";
-import router from "@/router";
-import store from "@/store/store.js";
-import util from "@/util/utils";
 import { http } from "./http";
+
 
 /**
  * @url 地址

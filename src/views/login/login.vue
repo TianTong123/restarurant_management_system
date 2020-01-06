@@ -20,6 +20,7 @@
 
 <script>
 import downLoadFileFlow from "@/server/downLoadFile";
+import util from "@/util/utils"
 export default {
   data(){
     return {
@@ -50,7 +51,10 @@ export default {
                 content: '登录成功！',
                 type: 'success'
               })
-              this.$store.state.token = res.data.data.token;
+              let token = res.data.data.token
+              //存储
+              this.$store.state.token = token;
+              util.saveSession("token", token)
               this.$router.replace({name: 'home'})
             }else if(res.data.code == 1){
               this.$myMsg.notify({

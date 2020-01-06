@@ -25,7 +25,6 @@ export default {
     msg(){
       this.$http.test({
         accountCode: "565165",
-        //token: this.$store.state.token,
       })
       // this.$myMsg.notify({
       //           content: '登录成功！',

@@ -30,7 +30,7 @@
             <i class="el-icon-s-claim"></i>
             <span slot="title">订单管理</span>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="commodity">
             <i class="el-icon-cherry"></i>
             <span slot="title">商品管理</span>
           </el-menu-item>

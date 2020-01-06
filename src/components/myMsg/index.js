@@ -9,7 +9,7 @@ const notify = vue.extend(myNotify);
 //添加通知节点
 let notifyWrap = document.createElement('div');
 notifyWrap.className = "notify-wrap"
-notifyWrap.style = "position: fixed; right: 0px; top: 90px; transition-duration: .5s;"
+notifyWrap.style = "position: fixed; z-index: 99999; right: 0px; top: 90px; transition-duration: .5s;"
 document.body.appendChild(notifyWrap);
 
 

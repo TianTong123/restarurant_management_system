@@ -44,6 +44,14 @@ export default new Router({
           },
           component: () => import("@/views/order/order"), //订单管理
         },
+        {
+          path: "commodity",
+          name: "commodity",
+          meta:{
+            title: '商品管理',
+          },
+          component: () => import("@/views/commodity/commodity"), //商品管理
+        },
       ]
     },
   ]

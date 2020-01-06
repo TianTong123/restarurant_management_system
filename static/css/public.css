@@ -23,7 +23,7 @@
 }
 /* 按钮 */
 .m-head .el-button{
-  margin-left: 20px;;
+  margin: 20px 0 0 20px;
 }
 
 .m-body{
@@ -58,3 +58,54 @@
   height: 100%;
 }
 
+/* 弹框样式 */
+.el-dialog{
+  width: 600px;
+}
+.el-dialog .el-form-item{
+  display: flex;
+  padding: 0 60px;
+}
+.el-dialog .myform-item{
+  display: flex;
+  padding: 0 60px;
+  justify-content: space-between;
+}
+.el-dialog .myform-item .el-form-item{
+  padding: 0;
+  width: 45%;
+}
+.el-dialog .el-form-item__label{
+  width: 60px;
+  text-align: left;
+}
+.el-dialog .small{
+  width: 120px;
+}
+.el-dialog .el-form-item__content{
+  flex: 1;
+}
+/* 上传图片 */
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 137px;
+  height: 137px;
+  line-height: 137px;
+  text-align: center;
+}
+.avatar {
+  width: 137px;
+  height: 137px;
+  display: block;
+}
