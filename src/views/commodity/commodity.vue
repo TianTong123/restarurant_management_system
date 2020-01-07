@@ -23,6 +23,7 @@
       <!-- 表单 -->
       <div class="m-body">
         <el-table 
+          v-loading="loading"
           :data="tableData" 
           style="width: 100%" 
           tooltip-effect="dark" 
@@ -47,7 +48,7 @@
         </el-pagination>
       </div>
       <!-- 弹框 -->
-      <el-dialog title="新增商品" :visible.sync="dialogFormVisible">
+      <el-dialog title="新增商品" :modal="false" :visible.sync="dialogFormVisible" v-loading="loading">
         <el-form :model="formData">
           <div class="myform-item">
             <el-form-item label="商品名:">
@@ -68,17 +69,29 @@
               <el-input size="small" v-model="formData.saleCost"></el-input>
             </el-form-item>
           </div>
-          <el-form-item label="图片:">
-            <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="formData.picUrl" :src="formData.picUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
+          <div class="myform-item">
+            <el-form-item label="图片:">
+              <el-upload
+                class="avatar-uploader"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="formData.picUrl" :src="formData.picUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="添加备选:">
+              <el-select v-model="formData.options" multiple filterable allow-create default-first-option size="small" placeholder="请选择商品类型">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
           <el-form-item label="描述:">
             <el-input rows="4" v-model="formData.remark" type="textarea" maxlength="240" show-word-limit></el-input>
           </el-form-item>
@@ -131,6 +144,7 @@ export default {
   },
   data(){
     return{
+      loading: false,
       //查询
       searchForm:{
         input: '',
@@ -152,7 +166,7 @@ export default {
         size: 20,
         total: 100
       },
-      //
+      //弹框表单
       formData:{
         commodityName: '',//商品名
         options:'',//备选
@@ -163,6 +177,7 @@ export default {
         type: '',//商品类型
         creator: '',//创建人
         creatorAccount: '',//创建者账户
+        options: [],//备选
       },
       //弹框
       dialogFormVisible: true,

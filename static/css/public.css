@@ -76,7 +76,9 @@
   width: 45%;
 }
 .el-dialog .el-form-item__label{
+  padding: 0;
   width: 60px;
+  line-height: 30px;
   text-align: left;
 }
 .el-dialog .small{
@@ -84,6 +86,7 @@
 }
 .el-dialog .el-form-item__content{
   flex: 1;
+  line-height: 0;
 }
 /* 上传图片 */
 .avatar-uploader .el-upload {
@@ -96,6 +99,7 @@
 .avatar-uploader .el-upload:hover {
   border-color: #409EFF;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;

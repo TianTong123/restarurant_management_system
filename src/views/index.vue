@@ -57,82 +57,96 @@
 </template>
 
 <script>
-  export default {
-    data(){
-      return{
-        activeTab: 'home',
-        activeTabs: [{
-          title: '首页',
-          name: 'home',
-        }],
-      }
+import util from "@/util/utils"
+
+export default {
+  data(){
+    return{
+      activeTab: '',
+      activeTabs: [],
+    }
+  },
+  methods: {
+    //标签点击
+    tabClick(tab) {
+      this.$router.push({name: tab.name });
     },
-    methods: {
-      //标签点击
-      tabClick(tab) {
-        this.$router.push({name: tab.name });
-      },
-      
-      //删除标签
-      removeTab(targetName) {
-        let tabs = this.activeTabs;
-        let activeName = this.activeTab;
-        //当关闭的是当前激活的tab
-        if (activeName === targetName) {
-          tabs.forEach((tab, index) => {
-            if (tab.name === targetName) {
-              let nextTab = tabs[index + 1] || tabs[index - 1];
-              if (nextTab) {
-                activeName = nextTab.name;
-                this.$router.push({name: activeName });
-              }
+    
+    //删除标签
+    removeTab(targetName) {
+      let tabs = this.activeTabs;
+      let activeName = this.activeTab;
+      //当关闭的是当前激活的tab
+      if (activeName === targetName) {
+        tabs.forEach((tab, index) => {
+          if (tab.name === targetName) {
+            let nextTab = tabs[index + 1] || tabs[index - 1];
+            if (nextTab) {
+              activeName = nextTab.name;
+              this.$router.push({name: activeName });
             }
-          });
-        }
-        //关闭非激活页面
-        this.activeTab = activeName;
-        //不能关闭最后一个标签
-        if (this.$route.name != targetName && this.activeTabs.length>1){
-          this.activeTabs = tabs.filter(tab => tab.name !== targetName);
-        }
-      },
-
-      //增加标签
-      addTab(name, title) {
-        this.activeTabs.push({
-          title:title,
-          name: name,
-        });
-        this.activeTab = name;
-      },
-
-      //下拉菜单点击(点击用户头像的)
-      handleCommand(command) {
-        this.$message('click on item ' + command);
-      },
-    },
-    watch:{
-      //通过监听路由来进行控制tab的增减
-      $route(to) {
-        let isHaveNameFlag = false; //如果数组有这个路径，则为true，没有就是false
-        let activeIndex = 0;//激活tab的下标
-        for(let i = 0; i < this.activeTabs.length; i ++){
-          if(to.name == this.activeTabs[i].name){
-            isHaveNameFlag = true
-            activeIndex = i;
           }
-        }
-        
-        if(isHaveNameFlag){//如果有这个路径，则激活当前tab
-          this.activeTab = this.activeTabs[activeIndex].name
-        }
-        else{//如果没有这个路径。则新增一个tab并激活这个tab
-          this.addTab(to.name, to.meta.title)
-        }
-        
+        });
       }
-    }, 
+      //关闭非激活页面
+      this.activeTab = activeName;
+      //不能关闭最后一个标签
+      if (this.$route.name != targetName && this.activeTabs.length>1){
+        this.activeTabs = tabs.filter(tab => tab.name !== targetName);
+      }
+    },
+    //增加标签
+    addTab(name, title) {
+      this.activeTabs.push({
+        title:title,
+        name: name,
+      });
+      this.activeTab = name;
+    },
+    //下拉菜单点击(点击用户头像的)
+    handleCommand(command) {
+      this.$message('click on item ' + command);
+    },
+  },
+  watch:{
+    //通过监听路由来进行控制tab的增减
+    $route(to) {
+      let isHaveNameFlag = false; //如果数组有这个路径，则为true，没有就是false
+      let activeIndex = 0;//激活tab的下标
+      for(let i = 0; i < this.activeTabs.length; i ++){
+        if(to.name == this.activeTabs[i].name){
+          isHaveNameFlag = true
+          activeIndex = i;
+        }
+      }
+      
+      if(isHaveNameFlag){//如果有这个路径，则激活当前tab
+        this.activeTab = this.activeTabs[activeIndex].name
+      }
+      else{//如果没有这个路径。则新增一个tab并激活这个tab
+        this.addTab(to.name, to.meta.title)
+      }
+      
+    },
+    activeTab(){
+      util.saveSession('activeTabs', this.activeTabs);
+    }
+  }, 
+  mounted(){
+    //刷新时加载上次打开过的tab
+    let actTabs = util.getSession('activeTabs');
+    if(actTabs.length){
+      this.activeTabs = actTabs;
+    }else{
+      this.activeTabs = [{
+        title: '首页',
+        name: 'home',
+      }]
+    }
+    //激活当前路径的tab
+    this.activeTab = this.$route.name;
   }
+}
 </script>
 
 <style scoped>
