@@ -74,9 +74,10 @@ export const http = ({
       config.timeout = timeout;
     }
     
-    let token = util.getSession("token")
+    let token = util.getSession("token");
+    console.log("-->",token)
     if (token) {
-      config.headers.uid = "111";
+      config.headers.uid = util.getSession("user").accountCode;
       config.headers.token = token;
     }
     

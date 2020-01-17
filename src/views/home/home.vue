@@ -23,14 +23,14 @@ export default {
       })
     },
     msg(){
-      // this.$http.test({
-      //   accountCode: "565165",
-      // })
-      this.$myMsg.confirm({
-        content: this.num,
-        type: 'error',
-        callback: ()=>{console.log("!!!!")}
-      });
+      this.$http.test({
+        accountCode: "111",
+      })
+      // this.$myMsg.confirm({
+      //   content: this.num,
+      //   type: 'error',
+      //   callback: ()=>{console.log("!!!!")}
+      // });
     }
   }
 }

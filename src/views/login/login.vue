@@ -54,7 +54,8 @@ export default {
               let token = res.data.data.token
               //存储
               this.$store.state.token = token;
-              util.saveSession("token", token)
+              util.saveSession("token", token);
+              util.saveSession('user', res.data.data)
               this.$router.replace({name: 'home'})
             }else if(res.data.code == 1){
               this.$myMsg.notify({
