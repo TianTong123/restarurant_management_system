@@ -75,7 +75,7 @@ export const http = ({
     }
     
     let token = util.getSession("token");
-    console.log("-->",token)
+
     if (token) {
       config.headers.uid = util.getSession("user").accountCode;
       config.headers.token = token;

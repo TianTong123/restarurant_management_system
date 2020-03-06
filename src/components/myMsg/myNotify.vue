@@ -44,7 +44,7 @@
   right: 10px;
   padding-left: 10px;
   width: 320px;
-  height: 70px;
+  min-height: 70px;
   border-radius: 4px;
   background-color:rgb(255, 244, 224);
   box-shadow: -5px 5px 12px 0 rgba(204, 204, 204, .8);
@@ -70,8 +70,9 @@
   font-weight: 600;
 }
 .notify .content{
+  padding-bottom: 5px;
   width: 320px;
-  height: 30px;
+  min-height: 30px;
   font-size: 15px;
 }
 @keyframes show{

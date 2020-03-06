@@ -6,8 +6,8 @@
       <div class="login-title">登录</div>
       <div class="login-bg"></div>
       <el-form ref="loginForm" :rules="rules" :model="loginForm">
-        <el-form-item prop="account">
-          <el-input v-model="loginForm.account" placeholder="账号"></el-input>
+        <el-form-item prop="accountCode">
+          <el-input v-model="loginForm.accountCode" placeholder="账号"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input v-model="loginForm.password" placeholder="密码" show-password></el-input>
@@ -25,11 +25,12 @@ export default {
   data(){
     return {
       loginForm:{
-        account: "",
+        accountCode: "",
         password: '',
+        type: 1,
       },
        rules: {
-          account: [
+          accountCode: [
             { required: true, message: '账号不能为空', trigger: 'blur' },
           ],
           password: [
@@ -43,8 +44,7 @@ export default {
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
           this.$http.login({
-            accountCode: this.loginForm.account,
-            password: this.loginForm.password
+            ...this.loginForm
           }).then(res => {
             if(res.data.code == 0){
               this.$myMsg.notify({
