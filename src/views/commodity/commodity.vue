@@ -1,22 +1,24 @@
 <template>
-  <div class="commodity" style="height: 100%">
-    <div class="m-wrap">
+  <div class="commodity">
+    <div class="m-wrap m-view">
       <!-- 头 -->
       <div class="m-head">
-        <el-input v-model="searchForm.input" placeholder="请输入内容" clearable  prefix-icon="el-icon-search"></el-input>
+        <div class="m-label">菜名:</div><el-input v-model="searchForm.input" placeholder="请输入内容" clearable  prefix-icon="el-icon-search"></el-input>
+        <div class="m-label">类型:</div>
         <el-select v-model="searchForm.value" placeholder="请选择">
           <el-option
-            v-for="item in options"
+            v-for="item in typeOptions"
             :key="item.value"
             :label="item.label"
             :value="item.value">
           </el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchCommoity">搜索</el-button>
         <el-radio v-model="searchForm.radio" label="1">已下架</el-radio>
         <el-radio v-model="searchForm.radio" label="2">已上架</el-radio>
         <el-button type="primary" icon="el-icon-remove-outline">下架</el-button>
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="dialogFormVisible = true">新增商品</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click="deleteCommodity">删除商品</el-button>
       </div>
       <!-- 分割线 -->
       <el-divider></el-divider>
@@ -31,24 +33,42 @@
           :default-sort = "{prop: 'originalCost', saleCost: 'descending'}">
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column prop="commodityName" label="商品名" width="300"></el-table-column>
-          <el-table-column prop="originalCost" label="原价" sortable width="180"></el-table-column>
-          <el-table-column prop="saleCost" label="现价" sortable width="180"></el-table-column>
+          <el-table-column prop="originalCost" label="原价" sortable width="180">
+          </el-table-column>
+          <el-table-column prop="saleCost" label="现价" sortable width="180">
+            <template slot-scope="scope">
+                <div class="green-color">{{ scope.row.originalCost }}</div>
+            </template>
+          </el-table-column>
           <el-table-column prop="type" label="类型"></el-table-column>
+          <el-table-column prop="state" label="状态">
+            <template slot-scope="scope">
+                <span v-if="scope.row.state == 1">已上架</span>
+                <span v-if="scope.row.state == 0">已下架</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="viewCommodity(scope.row.id)">查看</el-button>
+              <el-button type="text" size="small" @click="editCommodity(scope.row.id)">编辑</el-button>
+            </template>
+          </el-table-column>
         </el-table>
 
         <!-- 分页 -->
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="pageInfo.currentPage"
-          :page-sizes="[5, 10, 15, 20]"
-          :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageInfo.total">
+          :current-page="pageInfo.current"
+          :page-size="pageInfo.pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
         </el-pagination>
       </div>
-      <!-- 弹框 -->
-      <el-dialog title="新增商品" :modal="false" :visible.sync="dialogFormVisible" v-loading="loading">
+      <!-- 新增商品弹框 -->
+      <el-dialog title="新增商品" :modal="false" :visible.sync="dialogFormVisible" v-loading="loadingDia">
         <el-form :model="formData">
           <div class="myform-item">
             <el-form-item label="商品名:">
@@ -56,8 +76,12 @@
             </el-form-item>   
             <el-form-item label="类型:">
             <el-select size="small" v-model="formData.type" placeholder="请选择商品类型">
-              <el-option label="区域一"  value="shanghai"></el-option>
-              <el-option label="区域二"  value="beijing"></el-option>
+              <el-option
+                v-for="item in typeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
           </div>
@@ -102,17 +126,33 @@
           <el-button size="small" type="primary" @click="addCommoity">确 定</el-button>
         </div>
       </el-dialog>
+
+       <!-- 查看商品弹框 -->
+      <el-dialog title="查看商品" :modal="false" :visible.sync="dialogViewCommodityVisible" v-loading="loadingDia" :before-close="closeDia">
+        <img :src="`http://192.168.17.126:8088/restaurant/file/imgShow/${viewCommodityInfo.picUrl}`" class="avatar" style="display: inline-block" >
+        <div class="content" style="display: inline-block; margin-left: 20px">
+          <div class="my-line-style"><span>创建人：</span>{{viewCommodityInfo.creator}}</div>
+          <div class="my-line-style"><span>商品名：</span>{{viewCommodityInfo.commodityName}}</div>
+          <div class="my-line-style"><span>现价：</span>{{viewCommodityInfo.saleCost}}</div>
+          <div class="my-line-style"><span>原价：</span>{{viewCommodityInfo.originalCost}}</div>
+          <div class="my-line-style"><span>创建时间：</span>{{viewCommodityInfo.createDate}}</div>
+          <div class="my-line-style"><span>类型：</span>{{viewCommodityInfo.type}}</div>
+          <div class="my-line-style"><span>备注：</span>{{viewCommodityInfo.remark}}</div>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
 import util from "@/util/utils";
+// import {myMsg} from "@/components/myMsg";
 
 export default {
   data(){
     return{
       loading: false,
+      loadingDia: false,//弹框的
       user:{
         accountCode: util.getSession("user").accountCode,
         name: util.getSession("user").name,
@@ -124,29 +164,22 @@ export default {
         radio: '1'
       },
       //选项
-      options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-      }],
+      typeOptions: [],
       //表格
       tableData:[],
       pageInfo:{
-        currentPage: 4,
-        size: 20,
-        total: 100
+        current: 1,
+        pageSize: 1,
       },
+      total: 0,
       //备选
       option:{
         optionName: '',
         price: '',
       },
-      //弹框表单
+      //新增弹框表单
       formData:{
         commodityName: '',//商品名
-        options:'',//备选
         picUrl: '',//图片
         remark: '',//描述
         saleCost: 0,//售/现价
@@ -156,51 +189,171 @@ export default {
         creatorAccount: '',//创建者账户
         options: [],//备选
       },
+      //查看商品
+      viewCommodityInfo: '',
       //弹框
-      dialogFormVisible: false,
+      dialogFormVisible: false,//新增商品
+      dialogViewCommodityVisible: false,//查看商品
     }
+  },
+  mounted(){
+    this.searchCommoity();
+    this.getTypeList();
   },
   methods:{
     //新增商品
     addCommoity(){
-      this.loading = true;
+      this.loadingDia = true;
       this.formData.creator = this.user.name;
       this.formData.creatorAccount = this.user.accountCode;
       this.$http.addCommoity(  this.formData )
           .then(res => {
-            this.loading = false;
+            this.loadingDia = false;
             this.dialogFormVisible = false;
             if (res.data.code == 0){
-              this.$myMsg.notify({
-                  content: res.data.msg,
-                  type: 'success'
-                })
+              this.$myMsg.notify({ content: res.data.msg, type: 'success' })
             }
             else{
-               this.$myMsg.notify({
-                  content: res.data.msg,
-                  type: 'error'
-                })
+              this.$myMsg.notify({ content: res.data.msg, type: 'error' })
+            }  
+          })
+         .catch(err => {
+            this.loadingDia = false;
+            this.dialogFormVisible = false;
+            this.$myMsg.notify({ content: err.message, type: 'error' })
+         })
+    },
+
+    //查询接口
+    searchCommoity(){
+      this.loading = true;
+      let parames = {
+        ...this.pageInfo,
+      }
+      this.$http.commoityList( parames )
+          .then(({data}) => {
+            this.loading = false;
+            this.dialogFormVisible = false;
+            if (data.code == 0){
+              this.tableData = data.data.records;
+              this.total = data.total;
+              this.current = 1;
+            }
+            else{
+              this.$myMsg.notify({
+                content: data.msg,
+                type: 'error'
+              })
             }  
           })
          .catch(err => {
             this.loading = false;
             this.dialogFormVisible = false;
             this.$myMsg.notify({
-             content: err,
+             content: err.message,
+             type: 'error'
+           })
+         })
+    },
+    
+    //查看详情
+    viewCommodity(id){
+      this.dialogViewCommodityVisible = true;
+      this.loadingDia = true;
+      let parames = {
+        id: id,
+      }
+      this.$http.getCommoityInfo( parames )
+          .then(({data}) => {
+            this.loadingDia = false;
+            if (data.code == 0){
+              this.viewCommodityInfo = data.data;
+            }
+            else{
+              this.$myMsg.notify({ content: data.msg, type: 'error'});
+            }  
+          })
+         .catch(err => {
+           this.loadingDia = false;
+            this.$myMsg.notify({ content: err.message, type: 'error' });
+         })
+    },
+    
+    //编辑商品
+    editCommodity(id){
+      console.log(id)
+    },
+    //删除商品
+    deleteCommodity(){
+      this.loadingDia = true;
+      let parames = {
+        commodityCodeList: this.multipleSelection,
+      }
+      //let that = this;
+      this.$myMsg.confirm({
+        type: 'error',
+        content: '是否删除这些商品！',
+        cancelFlag: true,
+        callback: ()=> {
+          this.$http.deleteCommoity( parames )
+          .then(({data}) => {
+            this.loadingDia = false;
+            if (data.code == 0){
+              this.viewCommodityInfo = data.data;
+            }
+            else{
+              this.$myMsg.notify({ content: data.msg, type: 'error'});
+            }  
+          })
+         .catch(err => {
+           this.loadingDia = false;
+            this.$myMsg.notify({ content: err.message, type: 'error' });
+         })
+        }
+      })
+      
+    },
+    //获取类型列表
+    getTypeList(){
+      this.loading = true;
+      let parames = {
+        ...this.pageInfo,
+      }
+      this.$http.getTypeList( parames )
+          .then(({data}) => {
+            this.loading = false;
+            this.dialogFormVisible = false;
+            if (data.code == 0){
+              this.typeOptions = [];
+              for(let i = 0; i < data.data.length; i++){
+                let temp = {value: data.data[i], label: data.data[i]};
+                this.typeOptions.push(temp)
+              }
+            }
+            else{
+              this.$myMsg.notify({
+                content: data.msg,
+                type: 'error'
+              })
+            }  
+          })
+         .catch(err => {
+            this.loading = false;
+            this.dialogFormVisible = false;
+            this.$myMsg.notify({
+             content: err.message,
              type: 'error'
            })
          })
     },
 
     //分页的方法
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-
+    closeDia(){
+      this.dialogViewCommodityVisible = false;
+    },
     //备选处理
     //添加
     addOption(){
@@ -218,8 +371,9 @@ export default {
 
     //选中的方法
     handleSelectionChange(val) {
-      this.multipleSelection = val;
+      this.multipleSelection = val.map(v=>v.commodityCode);
     },
+
     //上传图片
     handleAvatarSuccess(res, file) {
       this.formData.picUrl =`${res.data}`;

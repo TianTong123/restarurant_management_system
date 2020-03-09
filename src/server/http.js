@@ -5,6 +5,7 @@ import store from "@/store/store";
 import util from "@/util/utils";
 
 let myMsg = msg.myMsg;
+let i = 0;
 /**
  * @url 地址
  * @method 请求方法
@@ -24,7 +25,7 @@ export const http = ({
     responseType,
 }) => {
     // axios 默认设置
-    axios.defaults.retry = 1;//重试次数
+    axios.defaults.retry = 0;//重试次数
     axios.defaults.retryDelay = 1000;//重试延迟
   
     // axios response拦截器
@@ -53,10 +54,13 @@ export const http = ({
       },
       //接口错误状态处理
       error => {
-        myMsg.confirm({
-          type: 'error',
-          content: "这个错误，是后台的锅！",//显示返回的错误信息
-        })
+        i++
+        //if(i == 1){
+          myMsg.confirm({
+            type: 'error',
+            content: "这个错误，是后台的锅！",//显示返回的错误信息
+          })
+        //} 
         return error
       }
     )

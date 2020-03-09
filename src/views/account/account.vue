@@ -1,5 +1,5 @@
 <template>
-  <div class="account" style="height: 100%">
+  <div class="account m-view">
     <div class="m-wrap">
       <div class="m-head">
         <el-input v-model="searchForm.input" placeholder="请输入内容" clearable  prefix-icon="el-icon-search"></el-input>
