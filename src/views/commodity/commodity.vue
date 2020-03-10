@@ -3,9 +3,9 @@
     <div class="m-wrap m-view">
       <!-- 头 -->
       <div class="m-head">
-        <div class="m-label">菜名:</div><el-input v-model="searchForm.input" placeholder="请输入内容" clearable  prefix-icon="el-icon-search"></el-input>
+        <div class="m-label">菜名:</div><el-input v-model="searchForm.commName" placeholder="请输入内容" clearable  prefix-icon="el-icon-search"></el-input>
         <div class="m-label">类型:</div>
-        <el-select v-model="searchForm.value" placeholder="请选择">
+        <el-select v-model="searchForm.sType" placeholder="请选择" clearable>
           <el-option
             v-for="item in typeOptions"
             :key="item.value"
@@ -13,10 +13,12 @@
             :value="item.value">
           </el-option>
         </el-select>
+        
+        <el-radio v-model="searchForm.state" label="0">已下架</el-radio>
+        <el-radio v-model="searchForm.state" label="1">已上架</el-radio>
         <el-button type="primary" icon="el-icon-search" @click="searchCommoity">搜索</el-button>
-        <el-radio v-model="searchForm.radio" label="1">已下架</el-radio>
-        <el-radio v-model="searchForm.radio" label="2">已上架</el-radio>
-        <el-button type="primary" icon="el-icon-remove-outline">下架</el-button>
+        <el-button type="primary" icon="el-icon-remove-outline" @click="upCommodity" v-show="searchForm.state==1">下架</el-button>
+        <el-button type="primary" icon="el-icon-remove-outline" @click="upCommodity" v-show="searchForm.state==0">上架</el-button>
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="dialogFormVisible = true">新增商品</el-button>
         <el-button type="primary" icon="el-icon-delete" @click="deleteCommodity">删除商品</el-button>
       </div>
@@ -37,7 +39,7 @@
           </el-table-column>
           <el-table-column prop="saleCost" label="现价" sortable width="180">
             <template slot-scope="scope">
-                <div class="green-color">{{ scope.row.originalCost }}</div>
+                <div class="green-color">{{ scope.row.saleCost }}</div>
             </template>
           </el-table-column>
           <el-table-column prop="type" label="类型"></el-table-column>
@@ -52,7 +54,7 @@
             label="操作"
             width="100">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="viewCommodity(scope.row.id)">查看</el-button>
+              <el-button type="text" size="small" @click="viewCommodity(scope.row.id, false)">查看</el-button>
               <el-button type="text" size="small" @click="editCommodity(scope.row.id)">编辑</el-button>
             </template>
           </el-table-column>
@@ -67,22 +69,21 @@
           :total="total">
         </el-pagination>
       </div>
-      <!-- 新增商品弹框 -->
-      <el-dialog title="新增商品" :modal="false" :visible.sync="dialogFormVisible" v-loading="loadingDia">
+      <!-- 新增/编辑商品弹框 -->
+      <el-dialog :title="diaTitle" :modal="false" :visible.sync="dialogFormVisible" v-loading="loadingDia">
         <el-form :model="formData">
           <div class="myform-item">
             <el-form-item label="商品名:">
               <el-input size="small" v-model="formData.commodityName"></el-input>
             </el-form-item>   
             <el-form-item label="类型:">
-            <el-select size="small" v-model="formData.type" placeholder="请选择商品类型">
-              <el-option
-                v-for="item in typeOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+              <el-autocomplete
+                class="inline-input"
+                v-model="formData.type"
+                :fetch-suggestions="querySearch"
+                placeholder="请输入内容"
+                @select="handleSelect"
+              ></el-autocomplete>
           </el-form-item>
           </div>
           <div class="myform-item">
@@ -105,7 +106,7 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>
-            <el-form-item label="添加备选:">
+            <!-- <el-form-item label="添加备选:">
               <el-input size="mini" v-model="option.optionName" maxlength="5" show-word-limit style="margin-bottom: 5px" placeholder="备选名字"></el-input>
               <el-input size="mini" v-model="option.price" type="number" style="width: 78px" placeholder="价格"></el-input>
               <el-button size="mini" @click="addOption">添加</el-button>
@@ -115,7 +116,7 @@
                   <i class="close" @click="deleteOption(index)"/>
                 </div>
               </div>
-            </el-form-item>
+            </el-form-item> -->
           </div>
           <el-form-item label="描述:">
             <el-input rows="4" v-model="formData.remark" type="textarea" maxlength="240" show-word-limit></el-input>
@@ -159,9 +160,9 @@ export default {
       },
       //查询
       searchForm:{
-        input: '',
-        value: '',
-        radio: '1'
+        commName: '',
+        sType: '',
+        state: '1'
       },
       //选项
       typeOptions: [],
@@ -169,14 +170,14 @@ export default {
       tableData:[],
       pageInfo:{
         current: 1,
-        pageSize: 1,
+        pageSize: 10,
       },
       total: 0,
       //备选
-      option:{
-        optionName: '',
-        price: '',
-      },
+      // option:{
+      //   optionName: '',
+      //   price: '',
+      // },
       //新增弹框表单
       formData:{
         commodityName: '',//商品名
@@ -192,6 +193,7 @@ export default {
       //查看商品
       viewCommodityInfo: '',
       //弹框
+      diaTitle: "新增商品",
       dialogFormVisible: false,//新增商品
       dialogViewCommodityVisible: false,//查看商品
     }
@@ -204,6 +206,7 @@ export default {
     //新增商品
     addCommoity(){
       this.loadingDia = true;
+      this.diaTitle = "新增商品"
       this.formData.creator = this.user.name;
       this.formData.creatorAccount = this.user.accountCode;
       this.$http.addCommoity(  this.formData )
@@ -229,6 +232,7 @@ export default {
       this.loading = true;
       let parames = {
         ...this.pageInfo,
+        ...this.searchForm
       }
       this.$http.commoityList( parames )
           .then(({data}) => {
@@ -236,8 +240,7 @@ export default {
             this.dialogFormVisible = false;
             if (data.code == 0){
               this.tableData = data.data.records;
-              this.total = data.total;
-              this.current = 1;
+              this.total = data.data.total;
             }
             else{
               this.$myMsg.notify({
@@ -257,8 +260,10 @@ export default {
     },
     
     //查看详情
-    viewCommodity(id){
-      this.dialogViewCommodityVisible = true;
+    viewCommodity(id, flag){
+      if(!flag){
+         this.dialogViewCommodityVisible = true;
+      }
       this.loadingDia = true;
       let parames = {
         id: id,
@@ -268,6 +273,7 @@ export default {
             this.loadingDia = false;
             if (data.code == 0){
               this.viewCommodityInfo = data.data;
+              if(flag) this.formData = data.data
             }
             else{
               this.$myMsg.notify({ content: data.msg, type: 'error'});
@@ -281,8 +287,13 @@ export default {
     
     //编辑商品
     editCommodity(id){
-      console.log(id)
+      console.log("????")
+      this.diaTitle = "编辑商品";
+      this.dialogFormVisible = true;
+      this.viewCommodity(id, true);
+      
     },
+
     //删除商品
     deleteCommodity(){
       this.loadingDia = true;
@@ -311,7 +322,36 @@ export default {
          })
         }
       })
-      
+    },
+
+    //上下架商品
+    upCommodity(){
+      this.loadingDia = true;
+      let parames = {
+        
+        commodityCodeList: this.multipleSelection,
+      }
+      this.$myMsg.confirm({
+        type: 'error',
+        content: '是否删除这些商品！',
+        cancelFlag: true,
+        callback: ()=> {
+          this.$http.deleteCommoity( parames )
+          .then(({data}) => {
+            this.loadingDia = false;
+            if (data.code == 0){
+              this.viewCommodityInfo = data.data;
+            }
+            else{
+              this.$myMsg.notify({ content: data.msg, type: 'error'});
+            }  
+          })
+         .catch(err => {
+           this.loadingDia = false;
+            this.$myMsg.notify({ content: err.message, type: 'error' });
+         })
+        }
+      })
     },
     //获取类型列表
     getTypeList(){
@@ -349,19 +389,51 @@ export default {
 
     //分页的方法
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pageInfo.current = val;
+      this.searchCommoity();
     },
+
+    //关闭弹框
     closeDia(){
       this.dialogViewCommodityVisible = false;
     },
+
+    //清空参数
+    clearParame(){
+      this.formData = {
+        commodityName: '',//商品名
+        picUrl: '',//图片
+        remark: '',//描述
+        saleCost: 0,//售/现价
+        originalCost: 0,//原价
+        type: '',//商品类型
+        creator: '',//创建人
+        creatorAccount: '',//创建者账户
+        options: [],//备选
+      }
+    },
     //备选处理
     //添加
-    addOption(){
-      //插入数据
-      this.formData.options.push({optionName: this.option.optionName, price: this.option.price});
-      //清空
-      this.option.optionName = "";
-      this.option.price = 0;
+    // addOption(){
+    //   //插入数据
+    //   this.formData.options.push({optionName: this.option.optionName, price: this.option.price});
+    //   //清空
+    //   this.option.optionName = "";
+    //   this.option.price = 0;
+    // },
+    querySearch(queryString, cb) {
+      let restaurants = this.typeOptions;
+      let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    handleSelect(item) {
+      console.log(item);
     },
     //删除
     deleteOption(index){

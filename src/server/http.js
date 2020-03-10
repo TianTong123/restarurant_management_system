@@ -5,7 +5,7 @@ import store from "@/store/store";
 import util from "@/util/utils";
 
 let myMsg = msg.myMsg;
-let i = 0;
+
 /**
  * @url 地址
  * @method 请求方法
@@ -48,19 +48,17 @@ export const http = ({
           })
           return response
         }else {
-          let config = response.config;
           return response
         }
       },
       //接口错误状态处理
       error => {
-        i++
-        //if(i == 1){
-          myMsg.confirm({
-            type: 'error',
-            content: "这个错误，是后台的锅！",//显示返回的错误信息
-          })
-        //} 
+        if(error.response.data.status != null || error.response.data.status != ""){
+         myMsg.confirm({
+           type: 'error',
+           content: "这个错误，是后台的锅！",//显示返回的错误信息
+         })
+        } 
         return error
       }
     )

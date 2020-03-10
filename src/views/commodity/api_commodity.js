@@ -38,7 +38,7 @@ const api = {
   deleteCommoity: data => req({
     baseUrl: baseUrl,
     method: "post",
-    url: "/commodity/batchDelete",
+    url: "commodity/batchDelete",
     params: data
   }),
 }
