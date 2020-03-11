@@ -82,9 +82,6 @@ export const http = ({
       config.headers.uid = util.getSession("user").accountCode;
       config.headers.token = token;
     }
-    
- 
-
 
     //get方法拼接参数
     method = method.toUpperCase();

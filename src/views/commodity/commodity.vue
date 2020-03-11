@@ -5,7 +5,7 @@
       <div class="m-head">
         <div class="m-label">菜名:</div><el-input v-model="searchForm.commName" placeholder="请输入内容" clearable  prefix-icon="el-icon-search"></el-input>
         <div class="m-label">类型:</div>
-        <el-select v-model="searchForm.sType" placeholder="请选择" clearable>
+        <el-select v-model="searchForm.sType" placeholder="请选择" @change="stateChange" clearable>
           <el-option
             v-for="item in typeOptions"
             :key="item.value"
@@ -14,8 +14,8 @@
           </el-option>
         </el-select>
         
-        <el-radio v-model="searchForm.state" label="0">已下架</el-radio>
-        <el-radio v-model="searchForm.state" label="1">已上架</el-radio>
+        <el-radio v-model="searchForm.state" @change="stateChange" label="0">已下架</el-radio>
+        <el-radio v-model="searchForm.state" @change="stateChange" label="1">已上架</el-radio>
         <el-button type="primary" icon="el-icon-search" @click="searchCommoity">搜索</el-button>
         <el-button type="primary" icon="el-icon-remove-outline" @click="upCommodity" v-show="searchForm.state==1">下架</el-button>
         <el-button type="primary" icon="el-icon-remove-outline" @click="upCommodity" v-show="searchForm.state==0">上架</el-button>
@@ -55,7 +55,7 @@
             width="100">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="viewCommodity(scope.row.id, false)">查看</el-button>
-              <el-button type="text" size="small" @click="editCommodity(scope.row.id)">编辑</el-button>
+              <el-button type="text" size="small" @click="openEditDia(scope.row.id)">编辑</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -70,7 +70,7 @@
         </el-pagination>
       </div>
       <!-- 新增/编辑商品弹框 -->
-      <el-dialog :title="diaTitle" :modal="false" :visible.sync="dialogFormVisible" v-loading="loadingDia">
+      <el-dialog :title="diaTitle" :modal="false" :visible.sync="dialogFormVisible" v-loading="loadingDia" :before-close="closeDia">
         <el-form :model="formData">
           <div class="myform-item">
             <el-form-item label="商品名:">
@@ -123,8 +123,9 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" @click="addCommoity">确 定</el-button>
+          <el-button size="small" @click="closeDia">取 消</el-button>
+          <el-button size="small" type="primary" @click="addCommoity" v-show="!isEdit">确 定</el-button>
+          <el-button size="small" type="primary" @click="editCommodity" v-show="isEdit">确 定</el-button>
         </div>
       </el-dialog>
 
@@ -168,6 +169,7 @@ export default {
       typeOptions: [],
       //表格
       tableData:[],
+      multipleSelection: [],//选中的参数
       pageInfo:{
         current: 1,
         pageSize: 10,
@@ -193,6 +195,7 @@ export default {
       //查看商品
       viewCommodityInfo: '',
       //弹框
+      isEdit: false,
       diaTitle: "新增商品",
       dialogFormVisible: false,//新增商品
       dialogViewCommodityVisible: false,//查看商品
@@ -207,6 +210,7 @@ export default {
     addCommoity(){
       this.loadingDia = true;
       this.diaTitle = "新增商品"
+      this.isEdit = false;
       this.formData.creator = this.user.name;
       this.formData.creatorAccount = this.user.accountCode;
       this.$http.addCommoity(  this.formData )
@@ -215,6 +219,7 @@ export default {
             this.dialogFormVisible = false;
             if (res.data.code == 0){
               this.$myMsg.notify({ content: res.data.msg, type: 'success' })
+              this.searchCommoity();
             }
             else{
               this.$myMsg.notify({ content: res.data.msg, type: 'error' })
@@ -284,33 +289,51 @@ export default {
             this.$myMsg.notify({ content: err.message, type: 'error' });
          })
     },
-    
+
     //编辑商品
-    editCommodity(id){
-      console.log("????")
-      this.diaTitle = "编辑商品";
-      this.dialogFormVisible = true;
-      this.viewCommodity(id, true);
-      
+    editCommodity(){
+      this.$http.editCommoity( this.formData )
+          .then(res => {
+            this.loadingDia = false;
+            this.dialogFormVisible = false;
+            if (res.data.code == 0){
+              this.$myMsg.notify({ content: res.data.msg, type: 'success' })
+              this.searchCommoity();
+              this.clearParame();
+            }
+            else{
+              this.$myMsg.notify({ content: res.data.msg, type: 'error' })
+            }  
+          })
+         .catch(err => {
+            this.loadingDia = false;
+            this.dialogFormVisible = false;
+            this.clearParame();
+            this.$myMsg.notify({ content: err.message, type: 'error' })
+         })
     },
 
     //删除商品
     deleteCommodity(){
+      if(this.multipleSelection.length == 0){
+        this.$myMsg.notify({ content: '请选择至少一条数据再进行该操作！', type: 'error'});
+        return
+      }
       this.loadingDia = true;
       let parames = {
-        commodityCodeList: this.multipleSelection,
+        commodityCodeList: this.multipleSelection.map(v=>v.commodityCode),
       }
-      //let that = this;
       this.$myMsg.confirm({
-        type: 'error',
+        type: 'prompt',
         content: '是否删除这些商品！',
         cancelFlag: true,
         callback: ()=> {
-          this.$http.deleteCommoity( parames )
+          this.$http.deleteCommoity( parames.commodityCodeList )
           .then(({data}) => {
             this.loadingDia = false;
             if (data.code == 0){
-              this.viewCommodityInfo = data.data;
+              this.$myMsg.notify({ content: data.msg, type: 'success'});
+              this.searchCommoity();
             }
             else{
               this.$myMsg.notify({ content: data.msg, type: 'error'});
@@ -326,21 +349,26 @@ export default {
 
     //上下架商品
     upCommodity(){
+      if(this.multipleSelection.length == 0){
+        this.$myMsg.notify({ content: '请选择至少一条数据再进行该操作！', type: 'error'});
+        return
+      }
       this.loadingDia = true;
       let parames = {
-        
-        commodityCodeList: this.multipleSelection,
+        flag: this.searchForm.state==0?1:0,
+        idList: this.multipleSelection.map(v=>v.id),
       }
       this.$myMsg.confirm({
-        type: 'error',
-        content: '是否删除这些商品！',
+        type: 'prompt',
+        content: `是否${this.searchForm.state == 0?'上架':'下架'}这些商品！`,
         cancelFlag: true,
         callback: ()=> {
-          this.$http.deleteCommoity( parames )
+          this.$http.upOrDownCommoity( parames )
           .then(({data}) => {
             this.loadingDia = false;
             if (data.code == 0){
-              this.viewCommodityInfo = data.data;
+              this.$myMsg.notify({ content: data.msg, type: 'success'});
+              this.searchCommoity();
             }
             else{
               this.$myMsg.notify({ content: data.msg, type: 'error'});
@@ -353,6 +381,15 @@ export default {
         }
       })
     },
+    
+    //打开编辑窗
+    openEditDia(id){
+      this.diaTitle = "编辑商品";
+      this.isEdit = true;
+      this.dialogFormVisible = true;
+      this.viewCommodity(id, true);
+    },
+
     //获取类型列表
     getTypeList(){
       this.loading = true;
@@ -396,6 +433,13 @@ export default {
     //关闭弹框
     closeDia(){
       this.dialogViewCommodityVisible = false;
+      this.dialogFormVisible = false;
+      this.clearParame();
+    },
+
+    //改变状态触发
+    stateChange(){
+      this.searchCommoity();
     },
 
     //清空参数
@@ -443,7 +487,7 @@ export default {
 
     //选中的方法
     handleSelectionChange(val) {
-      this.multipleSelection = val.map(v=>v.commodityCode);
+      this.multipleSelection = val;
     },
 
     //上传图片

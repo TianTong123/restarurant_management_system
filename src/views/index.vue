@@ -36,7 +36,7 @@
           </el-menu-item>
           <el-menu-item index="account">
             <i class="el-icon-user-solid"></i>
-            <span slot="title">人员管理</span>
+            <span slot="title">账号管理</span>
           </el-menu-item>
         </el-menu>
       </div>

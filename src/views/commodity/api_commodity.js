@@ -41,6 +41,20 @@ const api = {
     url: "commodity/batchDelete",
     params: data
   }),
+  //上下架商品
+  upOrDownCommoity: data => req({
+    baseUrl: baseUrl,
+    method: "post",
+    url: "commodity/batchUpComm",
+    params: data
+  }),
+  //修改商品
+  editCommoity: data => req({
+    baseUrl: baseUrl,
+    method: "put",
+    url: "commodity",
+    params: data
+  }),
 }
 
 export default api
