@@ -38,6 +38,14 @@
             <i class="el-icon-user-solid"></i>
             <span slot="title">账号管理</span>
           </el-menu-item>
+          <el-menu-item index="role">
+            <i class="el-icon-user-solid"></i>
+            <span slot="title">角色管理</span>
+          </el-menu-item>
+          <el-menu-item index="right">
+            <i class="el-icon-user-solid"></i>
+            <span slot="title">权限管理</span>
+          </el-menu-item>
         </el-menu>
       </div>
       <div class="content">

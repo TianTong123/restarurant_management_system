@@ -39,7 +39,7 @@
           </el-table-column>
           <el-table-column prop="saleCost" label="现价" sortable width="180">
             <template slot-scope="scope">
-                <div class="green-color">{{ scope.row.saleCost }}</div>
+                <div class="red-color">{{ scope.row.saleCost }}</div>
             </template>
           </el-table-column>
           <el-table-column prop="type" label="类型"></el-table-column>
@@ -70,7 +70,7 @@
         </el-pagination>
       </div>
       <!-- 新增/编辑商品弹框 -->
-      <el-dialog :title="diaTitle" :modal="false" :visible.sync="dialogFormVisible" v-loading="loadingDia" :before-close="closeDia">
+      <el-dialog :title="diaTitle" :visible.sync="dialogFormVisible" v-loading="loadingDia" :before-close="closeDia">
         <el-form :model="formData">
           <div class="myform-item">
             <el-form-item label="商品名:">
@@ -130,7 +130,7 @@
       </el-dialog>
 
        <!-- 查看商品弹框 -->
-      <el-dialog title="查看商品" :modal="false" :visible.sync="dialogViewCommodityVisible" v-loading="loadingDia" :before-close="closeDia">
+      <el-dialog title="查看商品" :visible.sync="dialogViewCommodityVisible" v-loading="loadingDia" :before-close="closeDia">
         <img :src="`http://192.168.17.126:8088/restaurant/file/imgShow/${viewCommodityInfo.picUrl}`" class="avatar" style="display: inline-block" >
         <div class="content" style="display: inline-block; margin-left: 20px">
           <div class="my-line-style"><span>创建人：</span>{{viewCommodityInfo.creator}}</div>

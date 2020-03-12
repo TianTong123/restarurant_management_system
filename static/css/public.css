@@ -145,6 +145,11 @@
 /* 绿色字体 */
 .green-color{
   font-weight: 600;
+  color: #7CBC27;
+}
+/* 红色色字体 */
+.red-color{
+  font-weight: 600;
   color: #FE0000;
 }
 /* 查看行样式 */

@@ -52,6 +52,22 @@ export default new Router({
           },
           component: () => import("@/views/commodity/commodity"), //商品管理
         },
+        {
+          path: "role",
+          name: "role",
+          meta:{
+            title: '角色管理',
+          },
+          component: () => import("@/views/role/role"), //角色管理
+        },
+        {
+          path: "right",
+          name: "right",
+          meta:{
+            title: '权限管理',
+          },
+          component: () => import("@/views/right/right"), //权限管理
+        },
       ]
     },
   ]
