@@ -1,13 +1,14 @@
 import {req}  from "@/server/req";
 let baseUrl = 'devUrl';
 
-// 登录api
+// 统计api
 const api = {
-  //测试代码
-  test: data => req({
+  //销售额统计
+  getSalesVolume: data => req({
     baseUrl: baseUrl,
-    method: "post",
-    url: "user/testToken",
+    method: "get",
+    url: "main_order/saleCount",
+    isOriginalGET: true,
     params: data
   }), 
 }
