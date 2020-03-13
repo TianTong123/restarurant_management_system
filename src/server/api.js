@@ -8,36 +8,7 @@ import api_right from "@/views/right/api_right";
 import api_order from "@/views/order/api_order";
 
 let api = {
-  // Demo Code
-  // // 重置个人信息
-  // personalReset: data => req({
-  //     baseUrl: "osp",
-  //     method: "post",
-  //     url: "ralAccountSupplier/personalReset",
-  //     params: data
-  // }),
-  // editPassword: data =>req({
-  //     baseUrl: "auth",
-  //     method: "put",
-  //     url: `authUser?userkey=${data.userkey}&tokenkey=${data.tokenkey}`,
-  //     params: data
-  // }), //修改用户密码
-  // getCompanyInfo: data =>
-  //   req({
-  //     baseUrl: "osp",
-  //     method: "get",
-  //     url: "tblAccount/companyInfo",
-  //     params: data,
-  //     isOriginalGET: true
-  //   }),
-  // 下载文件1
-  // downLoadFile: data =>
-  //   req({
-  //     baseUrl: "osp",
-  //     method: "post",
-  //     url: "uploadFastdfs/downFile",
-  //     params: data
-  //   }),
+  
   // // 下载文件
   getFileFlow: data =>
     req({

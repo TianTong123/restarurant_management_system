@@ -9,6 +9,13 @@ const api = {
     url: "user/login",
     params: data
   }), 
+  //注销
+  logout: data => req({
+    baseUrl: baseUrl,
+    method: "post",
+    url: "user/logout",
+    params: data
+  }), 
 }
 
 export default api

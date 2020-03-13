@@ -1,13 +1,12 @@
 <template>
   <div class="restarurant">
     <header>
-      <div class="logo-title">余文国际五星级连锁酒店管理System</div>
+      <div class="logo-title">餐厅管理System</div>
       <div class="user-wrap">
         <el-dropdown trigger="click" @command="handleCommand">
-          <el-avatar size="small" src=""></el-avatar>
+          <el-avatar size="small" src="../../static/images/adminImg.jpg"></el-avatar>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-lock" command="1">修改密码</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-apple" command="2">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-apple" command="1">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -77,7 +76,9 @@ export default {
   methods: {
     //标签点击
     tabClick(tab) {
-      this.$router.push({name: tab.name });
+      if(tab.name == 1){
+        console.log("???");
+      }
     },
     
     //删除标签
@@ -113,7 +114,27 @@ export default {
     },
     //下拉菜单点击(点击用户头像的)
     handleCommand(command) {
-      this.$message('click on item ' + command);
+      if(command == 1){
+        let parames = {
+          token: util.getSession('token')
+        }
+        this.$http.logout( parames )
+        .then(({data}) => {
+          if (data.code == 0){
+            this.$myMsg.notify({content: '注销成功',type: 'success'});
+            this.$router.replace({name: 'login'})
+            util.removeSession("token");
+            util.removeSession("activeTabs");
+            util.removeSession("user");
+          }
+          else{
+            this.$myMsg.notify({content: data.msg,type: 'error'})
+          }  
+        })
+        .catch(err => {
+          this.$myMsg.notify({content: err.message,type: 'error'})
+        })
+      }
     },
   },
   watch:{

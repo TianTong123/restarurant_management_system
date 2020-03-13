@@ -1,7 +1,7 @@
 <template>
-  <div class="login">
+  <div class="login" v-loading="loading">
     <div class="bg"></div>
-    <span>余文国际后台管理系统</span>
+    <span>餐厅后台管理系统</span>
     <div class="wrap">
       <div class="login-title">登录</div>
       <div class="login-bg"></div>
@@ -24,6 +24,7 @@ import util from "@/util/utils"
 export default {
   data(){
     return {
+      loading: false,
       loginForm:{
         accountCode: "",
         password: '',
@@ -41,11 +42,13 @@ export default {
   },
   methods:{
     login(){
+      this.loading = true;
       this.$refs['loginForm'].validate((valid) => {
         if (valid) {
           this.$http.login({
             ...this.loginForm
           }).then(res => {
+            this.loading = false;
             if(res.data.code == 0){
               this.$myMsg.notify({
                 content: '登录成功！',
@@ -64,6 +67,7 @@ export default {
               })
             }
           }).catch(err => {
+            this.loading = false;
              this.$myMsg.notify({
               content: err,
               type: 'error'
