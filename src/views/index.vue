@@ -96,6 +96,7 @@ export default {
             }
           }
         });
+         util.saveSession('activeTabs', this.activeTabs);
       }
       //关闭非激活页面
       this.activeTab = activeName;

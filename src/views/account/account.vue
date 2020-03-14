@@ -93,7 +93,7 @@
               <el-option
                 v-for="item in options"
                 :key="item.id"
-                :label="item.rightName"
+                :label="item.roleName"
                 :value="item.id">
               </el-option>
             </el-select>
@@ -217,10 +217,10 @@ export default {
         current: 1,
         pageSize: 10000,
       }
-      this.$http.getRightList( parames )
+      this.$http.getRoleList( parames )
          .then(({data}) => {
            if (data.code == 0){
-               this.options = data.data.records;
+              this.options = data.data.records;
            }
            else{
              this.$myMsg.notify({ content: data.msg, type: 'error'});
