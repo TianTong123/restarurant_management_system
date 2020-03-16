@@ -24,13 +24,11 @@ export const http = ({
     isOriginalGET,
     responseType,
 }) => {
-    // axios 默认设置
-    axios.defaults.retry = 0;//重试次数
-    axios.defaults.retryDelay = 1000;//重试延迟
-  
+    
     // axios response拦截器
     axios.interceptors.response.use(
       response => {
+      
         //登录失效的时候重定向为登录页面
         if(response.data.code == 2){
           myMsg.confirm({
@@ -41,7 +39,7 @@ export const http = ({
             }
           })
           return response
-        }else if(response.data.code == 3){
+        }else if(response.data.code == 3){ 
           myMsg.confirm({
             type: 'error',
             content: '系统错误！',
@@ -54,10 +52,42 @@ export const http = ({
       //接口错误状态处理
       error => {
         if(error.response.data.status != null || error.response.data.status != ""){
-         myMsg.confirm({
-           type: 'error',
-           content: "这个错误，是后台的锅！",//显示返回的错误信息
-         })
+          let message = "";
+          switch (err.response.status) {
+            case 400:
+              message = '请求参数错误！'
+              break
+            case 404:
+              message = '地址找不到，404错误'
+              break
+            case 405:
+              message = '请求方法错误'
+              break
+            case 500:
+              message = '服务器端出错'
+              break
+            case 501:
+              message = '网络未实现'
+              break
+            case 502:
+              message = '网络错误'
+              break
+            case 503:
+              message = '服务不可用'
+              break
+            case 504:
+              message = '网络超时'
+              break
+            case 505:
+              message = 'http版本不支持该请求'
+              break
+            default:
+              message = `这个错误，是后台的锅！`
+          }
+          myMsg.confirm({
+            type: 'error',
+            content: message,//显示返回的错误信息
+          })
         } 
         return error
       }

@@ -7,18 +7,9 @@ import api_role from "@/views/role/api_role";
 import api_right from "@/views/right/api_right";
 import api_order from "@/views/order/api_order";
 
+//公用api
 let api = {
   
-  // // 下载文件
-  getFileFlow: data =>
-    req({
-      baseUrl: "testUrl",
-      method: "get",
-      url: "osp/tblResumeBase/downloadFlow",
-      params: data,
-      isOriginalGET: true,
-      responseType: "arraybuffer"
-    }),
 };
 api = Object.assign(
   api,

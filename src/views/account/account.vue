@@ -259,8 +259,12 @@ export default {
     //编辑账号
     editAccount(){
       this.loadingDia = true;
+      let {phone, name, password, id} = this.formData
       let parames = {
-        ...this.formData,
+        id,
+        phone,
+        name,
+        password
       }
       this.$http.editAccount( parames )
           .then(({data}) => {

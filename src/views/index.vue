@@ -76,9 +76,7 @@ export default {
   methods: {
     //标签点击
     tabClick(tab) {
-      if(tab.name == 1){
-        console.log("???");
-      }
+      this.$router.push({name: tab.name });
     },
     
     //删除标签
@@ -96,7 +94,6 @@ export default {
             }
           }
         });
-         util.saveSession('activeTabs', this.activeTabs);
       }
       //关闭非激活页面
       this.activeTab = activeName;
@@ -104,6 +101,7 @@ export default {
       if (this.$route.name != targetName && this.activeTabs.length>1){
         this.activeTabs = tabs.filter(tab => tab.name !== targetName);
       }
+      util.saveSession('activeTabs', this.activeTabs);
     },
     //增加标签
     addTab(name, title) {
@@ -159,6 +157,7 @@ export default {
       
     },
     activeTab(){
+      
       util.saveSession('activeTabs', this.activeTabs);
     }
   }, 

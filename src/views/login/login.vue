@@ -77,14 +77,6 @@ export default {
         }
       });
     },
-    downLodeFile () {
-      let obj = {
-        viewPath: "OSP/M00/00/00/rBBkKF38FWSEQK4RAAAAAIzsYvY298.pdf", //文件路径
-        groupName: "OSP",
-        fileName: ""
-      };
-      downLoadFileFlow(obj, "模板简历.pdf");
-    },
   }
 }
 </script>
