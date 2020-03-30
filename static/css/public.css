@@ -68,9 +68,6 @@
   bottom: 0;
   width: 100%;
 }
-.el-tabs .el-tabs__content .el-tab-pane{
-  height: 100%;
-}
 
 /* 弹框样式 */
 .el-dialog{

@@ -53,10 +53,9 @@
             v-for="item in activeTabs"
             :key="item.name"
             :label="item.title"
-            :name="item.name"
-          >
-            <router-view></router-view>
+            :name="item.name"> 
           </el-tab-pane>
+          <router-view></router-view>
         </el-tabs>
       </div>
     </div>

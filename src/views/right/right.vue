@@ -104,8 +104,7 @@ export default {
     searchRight(){
       this.loading = true;
       let parames = {
-        current: 1,
-        pageSize: 100000,
+        ...this.pageInfo
       }
       this.$http.getRightList( parames )
           .then(({data}) => {
