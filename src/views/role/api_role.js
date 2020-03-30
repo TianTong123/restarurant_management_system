@@ -15,7 +15,7 @@ const api = {
   getRole: data => req({
     baseUrl: baseUrl,
     method: "get",
-    url: "role",
+    url: "role/getRole",
     isOriginalGET: true,
     params: data
   }),
@@ -23,7 +23,7 @@ const api = {
   addRole: data => req({
     baseUrl: baseUrl,
     method: "post",
-    url: "role",
+    url: "role/saveRole",
     params: data
   }),
   //编辑角色

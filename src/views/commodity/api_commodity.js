@@ -7,7 +7,7 @@ const api = {
   addCommoity: data => req({
     baseUrl: baseUrl,
     method: "post",
-    url: "commodity",
+    url: "commodity/saveCommodity",
     params: data
   }),
   //商品列表
@@ -30,7 +30,7 @@ const api = {
   getCommoityInfo: data => req({
     baseUrl: baseUrl,
     method: "get",
-    url: "commodity",
+    url: "commodity/getCommodity",
     isOriginalGET: true,
     params: data
   }),
@@ -52,7 +52,7 @@ const api = {
   editCommoity: data => req({
     baseUrl: baseUrl,
     method: "put",
-    url: "commodity",
+    url: "commodity/updateCpmmodity",
     params: data
   }),
 }

@@ -15,7 +15,7 @@ const api = {
   getOrderInfo: data => req({
     baseUrl: baseUrl,
     method: "get",
-    url: "main_order",
+    url: "main_order/getOrder",
     isOriginalGET: true,
     params: data
   }),
@@ -23,7 +23,7 @@ const api = {
   addOrder: data => req({
     baseUrl: baseUrl,
     method: "post",
-    url: "main_order",
+    url: "main_order/saveOrder",
     params: data
   }),
   //删除订单
