@@ -51,14 +51,15 @@ export const http = ({
       },
       //接口错误状态处理
       error => {
-        if(error.response.data.status != null || error.response.data.status != ""){
+        console.log(error.response.status)
+        if(error.response.status != null || error.response.status != ""){
           let message = "";
-          switch (err.response.status) {
+          switch (error.response.status) {
             case 400:
               message = '请求参数错误！'
               break
             case 404:
-              message = '地址找不到，404错误'
+              message = '地址找不到！'
               break
             case 405:
               message = '请求方法错误'

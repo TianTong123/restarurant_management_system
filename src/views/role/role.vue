@@ -269,6 +269,7 @@ export default {
         }
       })
     },
+
     //获取权限列表
     getRightList(){
       let parames = {
@@ -329,9 +330,28 @@ export default {
 
     //打开角色编辑窗
     openRoleDia(id, name){
-      this.dialogEditRightFormVisible = true;
+      this.loadingDia = true;
       this.formRole.roleId = id;
       this.formRole.roleName = name;
+      let parames = {
+        id: id,
+      }
+      this.$http.getRole( parames )
+        .then(({data}) => {
+          this.loadingDia = false;
+          if (data.code == 0){
+             this.dialogEditRightFormVisible = true;
+             this.formRole.rightList = data.data.rights.map(v=>v.id);
+          }
+          else{
+            this.$myMsg.notify({ content: data.msg, type: 'error'});
+          }  
+        })
+        .catch(err => {
+          this.loadingDia = false;
+          this.$myMsg.notify({ content: err.message, type: 'error' });
+        })
+
     },
 
     //清空参数
