@@ -98,11 +98,11 @@
             <el-form-item label="图片:">
               <el-upload
                 class="avatar-uploader"
-                action="http://192.168.17.126:8088/restaurant/file/upload"
+                action="http://39.107.123.212:8088/restaurant/file/upload"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
-                <img v-if="formData.picUrl" :src="`http://192.168.17.126:8088/restaurant/file/imgShow/${formData.picUrl}`" class="avatar">
+                <img v-if="formData.picUrl" :src="`http://39.107.123.212/restaurant/file/imgShow/${formData.picUrl}`" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>
@@ -131,7 +131,7 @@
 
        <!-- 查看商品弹框 -->
       <el-dialog title="查看商品" :visible.sync="dialogViewCommodityVisible" v-loading="loadingDia" :before-close="closeDia">
-        <img :src="`http://192.168.17.126:8088/restaurant/file/imgShow/${viewCommodityInfo.picUrl}`" class="avatar" style="display: inline-block" >
+        <img :src="`http://39.107.123.212:8088/restaurant/file/imgShow/${viewCommodityInfo.picUrl}`" class="avatar" style="display: inline-block" >
         <div class="content" style="display: inline-block; margin-left: 20px">
           <div class="my-line-style"><span>创建人：</span>{{viewCommodityInfo.creator}}</div>
           <div class="my-line-style"><span>商品名：</span>{{viewCommodityInfo.commodityName}}</div>

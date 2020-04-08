@@ -51,8 +51,7 @@ export const http = ({
       },
       //接口错误状态处理
       error => {
-        console.log(error.response.status)
-        if(error.response.status != null || error.response.status != ""){
+        if(error.response != null){
           let message = "";
           switch (error.response.status) {
             case 400:
@@ -89,8 +88,13 @@ export const http = ({
             type: 'error',
             content: message,//显示返回的错误信息
           })
+          error = {
+            data:{
+              msg: message
+            }
+          }
+          return error
         } 
-        return error
       }
     )
 

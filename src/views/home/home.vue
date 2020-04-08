@@ -4,21 +4,21 @@
       <!-- 表单 -->
       <div class="m-block">
         <div class="m-title">销售总额</div> 
-        <el-date-picker v-model="salesVolumeTime" placeholder="开始日期" type="month" value-format="yyyy-MM" :clearable="true" :picker-options="pickerOptions"></el-date-picker>
+        <el-date-picker v-model="salesVolumeTime" placeholder="开始日期" type="month" value-format="yyyy-MM" :clearable="false" :picker-options="pickerOptions"></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="getSalesVolume">查询</el-button>
         <ve-line v-loading="loadingSale" :data="salesVolumeData" :settings="saleChartSettings" :extend="{series: { smooth: false }}"></ve-line>
       </div>
       <div class="m-block">
       
       <div class="m-title">商品数量</div> 
-        <el-date-picker v-model="commodityNumTime" placeholder="开始日期" type="month" value-format="yyyy-MM" :clearable="true" :picker-options="pickerOptions"></el-date-picker>
+        <el-date-picker v-model="commodityNumTime" placeholder="开始日期" type="month" value-format="yyyy-MM" :clearable="false" :picker-options="pickerOptions"></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="getCommodityNum">查询</el-button>
         <ve-histogram v-loading="loadingCommodity" :settings="commidtyChartSettings" :data="commodityNumData"></ve-histogram>
       </div>
       <div class="m-block">
       
       <div class="m-title">时段订单</div> 
-        <el-date-picker v-model="timeOrderTime" placeholder="开始日期"  value-format="yyyy-MM-dd" :clearable="true" :picker-options="pickerOptions"></el-date-picker>
+        <el-date-picker v-model="timeOrderTime" placeholder="开始日期"  value-format="yyyy-MM-dd" :clearable="false" :picker-options="pickerOptions"></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="getTimeOrder">查询</el-button>
         <ve-line v-loading="loadingTime" :settings="timeChartSettings" :data="timeOrderData" :extend="{series: { smooth: false }}"></ve-line>
       </div>

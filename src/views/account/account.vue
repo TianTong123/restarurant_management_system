@@ -21,7 +21,7 @@
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="viewAccount(scope.row.id, scope.row.accountCode, false)">查看</el-button>
               <el-button type="text" size="small" @click="openEditDia(scope.row.id, scope.row.accountCode)">编辑资料</el-button>
-              <el-button type="text" size="small" @click="openRightDia(scope.row.accountCode)">编辑角色</el-button>
+              <el-button type="text" size="small" @click="openRightDia(scope.row.id, scope.row.accountCode)">编辑角色</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -195,6 +195,7 @@ export default {
              this.viewAccountInfo = data.data;
              if(data.data.roleList.length > 0 && data.data.roleList[0] != null){
                this.viewAccountInfo.right = data.data.roleList;
+               this.formRight.rightList = data.data.roleList;
              }
              if(flag){
               this.formData = data.data;
@@ -320,9 +321,10 @@ export default {
     },
 
     //打开角色编辑窗
-    openRightDia(code){
+    openRightDia(id, code){
       this.dialogEditRightFormVisible = true;
       this.formRight.accountCode = code;
+      this.viewAccount(id, code, false);
     },
     //打开编辑窗
     openEditDia(id, accountCode){
